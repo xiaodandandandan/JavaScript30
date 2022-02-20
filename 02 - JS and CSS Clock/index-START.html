@@ -59,16 +59,69 @@
     .hand {
       width: 50%;
       height: 6px;
-      background: black;
+      background: white;
       position: absolute;
       top: 50%;
+      /* transform-origin CSS属性让你更改一个元素变形的原点。*/
+      transform-origin: 100%;
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
     }
+    /* 改变指针样式 */
+    .hour-hand{
+      width: 20%;
+      left: 30%;
+    }
+    .min-hand{
+      width: 40%;
+      left: 10%;
+      height: 4px;
+    }
+    .second-hand{
+      height: 2px;
+    }
+    
 
   </style>
 
   <script>
+    // 分别获取代表时针 分针 秒针的三个div元素
+    const hourHand = document.querySelector('.hour-hand')
+    const minHand = document.querySelector('.min-hand')
+    const secondHand = document.querySelector('.second-hand')
+    // 实现转动的函数 获取当前时间 设置对应的指针角度
+    function setDate(){
+      // 由于每秒钟都要新建一个date对象 重新设置角度 
+      // 因此当经过一分钟秒针到0的位置会出现逆时针转到
+      // 初始位置再重新开始转动的情况 440 -> 90 -> 96
+      //获取当前时间
+      const time = new Date();
+      //获取秒  计算度数 设置样式 旋转度数 css中将指针设计为水平因此该在初始时+90
+      const seconds = time.getSeconds();
+      const secondsDegrees = ((seconds / 60) * 360) + 90;
+      //解决办法1 在特殊点将transition时间设成0 时间极短 看不到闪的效果
+      //办法2 只在初始时设置角度，在之后的每一秒不停增加度数，不会出现逆时针现象。
+      if (secondsDegrees === 90) secondHand.style.transition = 'all 0s';
+      else secondHand.style.transition = 'all 0.05s';
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
 
+      //获取分钟 计算度数 设置样式 旋转度数
+      const min = time.getMinutes();
+      const minsDegrees = ((min / 60) * 360) + ((seconds/60)*6) + 90;
+      if (minsDegrees === 90) minHand.style.transition = 'all 0s';
+      else minHand.style.transition = 'all 0.1s';
+      minHand.style.transform = `rotate(${minsDegrees}deg)`;
 
+      //获取当前小时数 计算度数 设置样式 旋转度数
+      const hour = time.getHours();
+      const hourDegrees = ((hour / 12) * 360) + ((min/60)*30) + 90;
+      hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+    }
+    
+    //利用定时器实现每秒重新设置当前指针的位置
+    setInterval(setDate,1000);
+    
+    setDate();
   </script>
 </body>
 </html>

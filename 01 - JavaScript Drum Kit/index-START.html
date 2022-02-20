@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
+  
 </head>
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -58,6 +57,35 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+    // 发生变化的有三个样式属性，需要添加一个判断语句，
+    // 使每发生一次按键事件时，只去除一次样式。
+    function removeTransition(e){
+      if (e.propertyName !== 'transform') return;
+      //移除按键后效果样式
+      e.target.classList.remove('playing');
+    }
+    
+    const keys = Array.from(document.querySelectorAll('.key'));
+    /* 
+    transitionend事件
+    会在 CSS transition 结束后触发
+    实现使页面按钮恢复原状 样式变化完成后移除 实现闪现效果
+    */
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+    //绑定事件 按下键盘时触发
+    window.addEventListener('keydown',function(e){
+      //根据按下的键码获取对应的audio和div元素
+      //模板字面量
+      const audio = document.querySelector(`audio[data-key = '${e.keyCode}']`);
+      const key = document.querySelector(`div[data-key = '${e.keyCode}']`);
+      if(!audio) return;
+     
+      //为当前元素设置选中样式
+      key.classList.add('playing');
+      //播放 设置时间戳从头开始，长时间按键时都从头播放
+      audio.currentTime = 0;
+      audio.play();
+    })
 
 </script>
 

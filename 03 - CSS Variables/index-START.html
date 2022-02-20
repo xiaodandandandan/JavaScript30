@@ -12,16 +12,33 @@
     <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
 
     <label for="blur">Blur:</label>
-    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+    <input id="blur" type="range" name="blur" min="0" max="25" value="0" data-sizing="px">
 
     <label for="base">Base Color</label>
     <input id="base" type="color" name="base" value="#ffc600">
   </div>
 
-  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+  <img src="../01 - JavaScript Drum Kit/02.jpg">
 
   <style>
+    /* :root 这个 CSS 伪类匹配文档树的根元素。声明全局 CSS 变量 */
+      :root{
+        --base:#ffc600;
+        --spacing:10px;
+        --blur:0px;
+      }
 
+      img{
+        width: 800px;
+        background-color: var(--base);
+        padding: var(--spacing);
+        /* filter CSS属性将模糊或颜色偏移等图形效果应用于元素。blur() 函数将高斯模糊应用于输入图像 */
+        filter: blur(var(--blur));
+      }
+
+      .hl{
+        color: var(--base);
+      }
     /*
       misc styles, nothing to do with CSS variables
     */
@@ -45,6 +62,30 @@
   </style>
 
   <script>
+    // 实现功能
+    // 1.背景范围padding岁选择变化
+    // 2.根据选择改变图片高斯模糊的半径
+    // 3.根据图片选择器的颜色改变图片背景颜色和标题JS颜色
+
+    const spacing = document.querySelector('#spacing');
+    const blurDiv = document.querySelector('#blur');
+    const base = document.querySelector('#base');
+
+    // 当指针设备( 通常指鼠标 )在元素上移动时, mousemove 事件被触发。可以体现出元素变化的过程
+    spacing.addEventListener('mousemove',function(){
+      document.documentElement.style.setProperty(`--${this.name}`,`${this.value}px`)
+    })
+
+    blurDiv.addEventListener('mousemove',function(){
+      document.documentElement.style.setProperty(`--${this.name}`,`${this.value}px`)
+    })
+    // 当用户更改<input>、<select>和<textarea> 元素的值并提交这个更改时，change 事件在这些元素上触发
+    base.addEventListener('change',function(){
+      console.log(this.value);
+      document.documentElement.style.setProperty(`--${this.name}`,this.value)
+    })
+
+
   </script>
 
 </body>
