@@ -22,10 +22,12 @@
     *, *:before, *:after {
       box-sizing: inherit;
     }
-
+    /* 第一个flex容器使图片五等分横向排列 */
     .panels {
       min-height: 100vh;
       overflow: hidden;
+      /* 弹性布局 */
+      display: flex;
     }
 
     .panel {
@@ -37,28 +39,55 @@
       /* Safari transitionend event.propertyName === flex */
       /* Chrome + FF transitionend event.propertyName === flex-grow */
       transition:
+        /* 字体先缩小后变大的效果由贝塞尔曲线实现 */
         font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        /* 图片先缩小后变大的效果由贝塞尔曲线实现 */
         flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
         background 0.2s;
       font-size: 20px;
       background-size: cover;
       background-position: center;
+      /* 第2个flex容器使每个panel内部的p标签纵向排列 */
+      display: flex;
+      /* 定义了浏览器之间，如何分配顺着弹性容器主轴(或者网格行轴) 的元素之间及其周围的空间。 
+        沿主轴的的对齐方式
+      */
+      justify-content: center;
+      /* flex CSS简写属性设置了弹性项目如何增大或缩小以适应其弹性容器中可用的空间。 
+        flex-growth：伸展值
+        flex-shrink：可接受的压缩值
+        flex-basis：元素默认的尺寸值
+        flex：以上三个值按顺序的缩写
+      */
+      flex: 1;
+      /* 指定了内部元素是如何在 flex 容器中布局的，定义了主轴的方向 */
+      flex-direction: column;
     }
 
-    .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
-    .panel2 { background-image:url(https://source.unsplash.com/rFKUFzjPYiQ/1500x1500); }
-    .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
-    .panel4 { background-image:url(https://source.unsplash.com/ITjiVXcwVng/1500x1500); }
-    .panel5 { background-image:url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500); }
+    .panel1 { background-image:url(./山海1.jpg); }
+    .panel2 { background-image:url(./山海2.jpg); }
+    .panel3 { background-image:url(./山海3.jpg); }
+    .panel4 { background-image:url(./山海4.jpg); }
+    .panel5 { background-image:url(./山海5.jpg); }
 
     /* Flex Children */
+    /* 第3个flex容器使每个p标签内部的文字横向排列 水平居中 */
     .panel > * {
       margin: 0;
       width: 100%;
-      transition: transform 0.5s;
+      /* property name | duration | delay */
+      /* 为了使文字移入在图片动画之后实现 将文字的动画效果延迟0.7s(图片动画的变化时间) */
+      transition: transform 0.5s .7s;
+      flex: 1 0 auto;
+      display: flex;
+      /* 水平居中 */
+      justify-content: center;
+      /* 垂直居中 沿侧轴的的对齐方式*/
+      align-items: center;
     }
 
     .panel p {
+      /* 强制所有字符被转换为大写。 */
       text-transform: uppercase;
       font-family: 'Amatic SC', cursive;
       text-shadow: 0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
@@ -68,11 +97,26 @@
     .panel p:nth-child(2) {
       font-size: 4em;
     }
-
+    /* 隐藏上下文字 */
+    .panel p:first-child {
+    	transform: translateY(-100%);
+    }
+    .panel p:last-child {
+    	transform: translateY(100%);
+    }
     .panel.open {
+      /* 点击后伸缩5倍 */
+      flex: 5;
       font-size: 40px;
     }
 
+    .panel.open p:first-child {
+    	transform: translateY(0);
+    }
+    .panel.open p:last-child {
+    	transform: translateY(0);
+    }
+    
   </style>
 
 
@@ -105,7 +149,14 @@
   </div>
 
   <script>
+    const panels = document.querySelectorAll('.panel');
 
+    function toggleOpen(){
+      // toggle() 方法从列表中删除一个给定的标记 并返回 false 。
+      // 如果标记 不存在，则添加并且函数返回 true。
+      this.classList.toggle('open');
+    }
+    panels.forEach(panel => panel.addEventListener('click',toggleOpen))
   </script>
 
 
