@@ -1,19 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>HTML5 Canvas</title>
 </head>
-<body>
-<canvas id="draw" width="800" height="800"></canvas>
-<script>
-</script>
 
-<style>
-  html, body {
-    margin: 0;
-  }
-</style>
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+    const canvas = document.querySelector('#draw');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // 图形边线的颜色和样式
+    ctx.strokeStyle = '#BADA55';
+    // 定义两线相交拐点的类型
+    ctx.lineJoin = 'round';
+    // 线末端的类型
+    ctx.lineCap = 'round';
+    // 画笔初始宽度为0
+    ctx.lineWidth = 0;
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    let hue = 0;
+    let direction = false;
+
+    function draw(e) {
+      if (!isDrawing) return;
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+      // 创建一个新的路径 
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(e.offsetX, e.offsetY);
+      // 使用当前的样式描边子路径。
+      ctx.stroke();
+      //初始值从当前鼠标位置开始
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+      // 每次移动改变色相值
+      hue++;
+      if (hue >= 360) {
+        hue = 0;
+      }
+      // 画笔大小
+      if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+        direction = !direction;
+      }
+      if (direction) {
+        ctx.lineWidth++;
+      } else {
+        ctx.lineWidth--;
+      }
+    }
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
 
 </body>
+
 </html>
