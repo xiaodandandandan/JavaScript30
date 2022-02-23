@@ -54,12 +54,14 @@ input.search {
   justify-content: space-between;
   text-transform: capitalize;
 }
-
+/*奇偶匹配 */
+/* 偶数 */
 .suggestions li:nth-child(even) {
   transform: perspective(100px) rotateX(3deg) translateY(2px) scale(1.001);
+  /* linear-gradient () 函数用于创建一个表示两种或多种颜色线性渐变的图片。 */
   background: linear-gradient(to bottom,  #ffffff 0%,#EFEFEF 100%);
 }
-
+/* 奇数 */
 .suggestions li:nth-child(odd) {
   transform: perspective(100px) rotateX(-3deg) translateY(3px);
   background: linear-gradient(to top,  #ffffff 0%,#EFEFEF 100%);

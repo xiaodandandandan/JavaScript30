@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Type Ahead 👀</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <form class="search-form">
@@ -14,9 +16,67 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    // 实现功能 模糊搜索 正则匹配 处理数组数据
+    // 1.处理JSON数据
+    const cities = [];
+    // Fetch API 提供了一个获取资源的接口（包括跨域请求）
+    fetch(endpoint)
+      .then(blob => blob.json())
+      // ES6中利用扩展运算符可以替代 ES5 中的 push 方法添加一个数组到另一个数组末尾
+      .then(data => cities.push(...data));
 
-</script>
+    // 在数组中查找匹配输入的项并返回
+    function findMatches(wordToMatch, cities) {
+      return cities.filter(place => {
+        // gi: 全局匹配 + 忽略大小写
+        const regex = new RegExp(wordToMatch, 'gi');
+        //输入字母在city中匹配或者在state中匹配 match returning the submatches found as a result.
+        return place.city.match(regex) || place.state.match(regex);
+      });
+    }
+    /* 
+      正则表达式相关
+      \B 匹配不是单词开头或结束的位置
+      (pattern) 匹配pattern并获取这一匹配
+      (?=pattern) 向前查找
+      正向肯定预查，在任何匹配pattern的字符串开始处匹配查找字符串。
+      这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。
+      (?!pattern)
+      正向否定预查，在任何不匹配pattern的字符串开始处匹配查找字符串。这是一个非获取匹配
+      \d 匹配数字
+      {3} 重复三次
+      + 重复一次或更多次
+     */
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    // 2.输入关键词后将数组中匹配的数据添加到ul的li中
+    function addList() {
+      const matchArr = findMatches(this.value, cities);
+      const html = matchArr.map(place => {
+        const reg = new RegExp(this.value, 'gi');
+        // 3.搜索的关键字母高亮
+        const cityName = place.city.replace(reg, `<span class = "hl">${this.value}</span>`);
+        const stateName = place.state.replace(reg, `<span class = "hl">${this.value}</span>`);
+        //console.log(stateName);
+        const str = `<li>
+          <span class="name">${cityName}, ${stateName}</span>
+          <span class="population">${numberWithCommas(place.population)}</span>
+        </li>`
+        return str;
+
+      }).join('');
+      suggestions.innerHTML = html;
+    }
+    const searchInput = document.querySelector('.search');
+    const suggestions = document.querySelector('.suggestions');
+
+    searchInput.addEventListener('change', addList);
+    searchInput.addEventListener('keyup', addList);
+
+  </script>
 </body>
+
 </html>
