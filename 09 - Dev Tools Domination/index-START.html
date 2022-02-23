@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Console Tricks!</title>
 </head>
+
 <body>
 
   <p onClick="makeGreen()">×BREAK×DOWN×</p>
@@ -16,31 +18,69 @@
       p.style.color = '#BADA55';
       p.style.fontSize = '50px';
     }
-
+    // 这个部分主要是实践了一些在 Console 面板里的调试技巧
     // Regular
+    console.log('hello hahaha');
+    // Interpolated 字符替换
+    console.log('Hello I am a %s string!', '💩');
+    console.log("我的名字叫做 %s 哈哈哈", "log");
+    console.log("我的年龄是 %f ", 20.5);
 
-    // Interpolated
-
-    // Styled
-
+    // Styled 设定输出的样式
+    console.log("偷偷告诉你，我会变身 %c ~\(≧▽≦)/~巴拉拉~~", "color: #00fdff; font-size: 2em;");
+    console.log('%c I am some great text', 'font-size:40px; background:red; text-shadow: 5px 5px 0 blue')
     // warning!
-
+    console.warn('警告！警告！警告！');
     // Error :|
-
+    console.error('错啦错啦错啦');
     // Info
-
+    console.info('Crocodiles eat 3-4 people per year');
     // Testing
+    const p = document.querySelector('p');
+    // 如果断言为false，则将一个错误消息写入控制台。如果断言是 true，没有任何反应。
+    console.assert(p.classList.contains('ouch'), 'That is wrong!');
+    console.assert(1 === 1, "（这句发布时删除）");
+    console.assert(1 === 0, "看看看，失策了吧");
+    console.assert(p.innerHTML.match("她"), "我这儿才没有她这个人");
 
     // clearing
-
+    console.clear()
     // Viewing DOM Elements
-
+    console.log(p);
+    console.dir(p);
     // Grouping together
+    dogs.forEach(dog => {
+      //console.log(`${dog.name}`);
+      //默认折叠
+      console.groupCollapsed(`${dog.name}`);
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.log(`${dog.name} is ${dog.age * 7} dog years old`);
+      console.groupEnd(`${dog.name}`);
+    });
 
     // counting
-
+    console.count("（读来过反）羊只");
+    console.count("（读来过反）羊只");
+    console.count("（读来过反）鱼条");
+    console.count("（读来过反）羊只");
+    console.count("（读来过反）羊只");
+    console.count("（读来过反）鱼条");
+    console.count("（读来过反）鱼条");
+    console.count("（读来过反）羊只");
     // timing
-
+    // 启动一个计时器来跟踪某一个操作的占用时长
+    // 当以此计时器名字为参数调用 console.timeEnd() 时，浏览器将以毫秒为单位，
+    // 输出对应计时器所经过的时间。
+    console.time('fetch my data');
+    fetch('https://api.github.com/users/xiaodandandandan')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetch my data');
+        console.log(data);
+      })
+    // console.table(dogs);
   </script>
 </body>
+
 </html>
