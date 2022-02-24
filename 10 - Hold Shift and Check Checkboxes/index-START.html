@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Hold Shift to Check Multiple Checkboxes</title>
 </head>
+
 <body>
   <style>
-
     html {
       font-family: sans-serif;
       background: #ffc600;
@@ -17,7 +18,7 @@
       margin: 50px auto;
       background: white;
       border-radius: 5px;
-      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
     }
 
     .item {
@@ -30,7 +31,7 @@
       border-bottom: 0;
     }
 
-    input:checked + p {
+    input:checked+p {
       background: #F9F9F9;
       text-decoration: line-through;
     }
@@ -44,16 +45,18 @@
       padding: 20px;
       transition: background 0.2s;
       flex: 1;
-      font-family:'helvetica neue';
+      font-family: 'helvetica neue';
       font-size: 20px;
       font-weight: 200;
       border-left: 1px solid #D1E2FF;
     }
   </style>
-   <!--
+  <!--
    The following is a common layout you would see in an email client.
 
-   When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+   When a user clicks a checkbox, holds Shift,
+  and then clicks another checkbox a few rows down, 
+  all the checkboxes inbetween those two checkboxes should be checked.
 
   -->
   <div class="inbox">
@@ -95,7 +98,51 @@
     </div>
   </div>
 
-<script>
-</script>
+  <script>
+    const checkboxes = document.querySelectorAll('.item input[type = "checkbox"]')
+    let lastChecked;
+    /*
+    此方法有一个小缺陷即先按shift键再点击选项时会导致后面所有项都被选中。
+    此外，对于取消选中，无法批量操作。
+    */
+    function handleCheck(e) {
+      let isBetween = false;
+      //选中shift 以及当前项被选中的时候开始遍历更改两次选中之间的项的选中状态
+      if (e.shiftkey && this.checked) {
+        checkboxes.forEach(checkbox => {
+          // 遇到选中的项或者上一次选中的项更改flag状态
+          if (checkbox === this || checkbox === lastChecked) {
+            inBetween = !inBetween;
+            console.log('Starting to check them in between!');
+          }
+          // isBetween为true时的项都设置为选中状态，
+          // 将在之后的循环中再次遇到选中项时更改为false停止选中状态更改
+          if (inBetween) {
+            checkbox.checked = true;
+          }
+        });
+      }
+      //记录前一次选中的项
+      lastChecked = this;
+    }
+
+    const boxArr = Array.from(checkboxes);
+    let onOff = false;
+
+    // 处理方法二：利用数组索引获取需要选中的范围
+    function handleCheck1(e) {
+      if (!lastChecked) lastChecked = this;
+      onOff = lastChecked.checked ? true : false;
+      if (e.shiftKey) {
+        let start = boxArr.indexOf(this);
+        let end = boxArr.indexOf(lastChecked);
+        boxArr.slice(Math.min(start, end), Math.max(start, end) + 1)
+          .forEach(input => input.checked = onOff);
+      }
+      lastChecked = this;
+    }
+    checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck1))
+  </script>
 </body>
+
 </html>
