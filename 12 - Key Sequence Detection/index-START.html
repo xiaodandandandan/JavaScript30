@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Key Detection</title>
   <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
 </head>
+
 <body>
-<script>
-</script>
+  <script>
+  // 而这个挑战要实现的效果是，
+  // 当在此页面完整输入了“暗号”（一串事先定义好的字符串）时，生成新的 Cornify 特效。
+  // 指定可激发特效的字符串
+  // 监听并获取输入的字符
+  // 处理输入，在符合条件时，调用 cornify
+  const pressed = [];
+  const secretCode = 'hi';
+
+  window.addEventListener('keyup',(e)=>{
+    pressed.push(e.key);
+    console.log(pressed);
+    pressed.splice(- secretCode.length - 1, pressed.length - secretCode.length); //截取数组
+    if(pressed.join('').includes(secretCode)){
+      console.log('Ding Ding');
+      cornify_add();
+    }
+  })
+  </script>
 </body>
+
 </html>

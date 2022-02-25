@@ -11,11 +11,14 @@
 
     // Let's say we have an array
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
-
+    console.log(players);
     // and we want to make a copy of it.
-
+    //只是拷贝地址 两个变量名指向同一地址 修改时会被同时修改
+    const arr = players;
     // You might think we can just do something like this:
-
+    arr[1] = 'hahaha';
+    console.log(arr);
+    console.log(players);
     // however what happens when we update that array?
 
     // now here is the problem!
@@ -27,13 +30,14 @@
     // So, how do we fix this? We take a copy instead!
 
     // one way
-
+    const team2 = players.slice();
     // or create a new array and concat the old one in
-
+    const team3 = [].concat(players);
     // or use the new ES6 Spread
-
+    const team4 = [...players]
     // now when we update it, the original one isn't changed
-
+    team4[1] = 'heihei'
+    console.log(team4,players);
     // The same thing goes for objects, let's say we have a person object
 
     // with Objects
@@ -43,13 +47,42 @@
     };
 
     // and think we make a copy:
-
+    const captain = person;
+    captain.number = 99;
+    console.log(captain,person);
     // how do we take a copy instead?
-
+    // Object.assign() 方法用于将所有可枚举属性的值从一个或多个源对象分配到目标对象。它将返回目标对象。
+    // Object.assign(target, ...sources)
+    // 针对深拷贝，需要使用其他办法，因为 Object.assign()拷贝的是（可枚举）属性值。
+    const cap2 = Object.assign({}, person, { number: 99, age: 12 });
+    console.log(cap2);
     // We will hopefully soon see the object ...spread
-
-    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
-
+    const cap3 = {...person};
+    cap3.number = 511;
+    console.log(cap3,person);
+    // Things to note - this is only 1 level deep - both for Arrays and Objects. 
+    // lodash has a cloneDeep method, but you should think twice before using it.
+    const wes = {
+      name: 'Wes',
+      age: 100,
+      social: {
+        twitter: '@wesbos',
+        facebook: 'wesbos.developer'
+      }
+    };
+    const dev = Object.assign({},wes);
+    dev.age = 31;
+    dev.name = 'change'
+    wes.social.twitter = '@wesboshhh'
+    console.clear();
+    //assign只能对浅层次拷贝，更深层的值只是拷贝地址，原来对象深层的值改变，拷贝对象深层的值被同时改变了
+    console.log(dev,wes);
+    //深拷贝
+    // JSON.parse() 方法用来解析JSON字符串，构造由字符串描述的JavaScript值或对象
+    // JSON.stringify() 方法将一个 JavaScript 对象或值转换为 JSON 字符串
+    const dev2 = JSON.parse(JSON.stringify(wes));
+    dev2.social.twitter = '@xiaodanxiaodan'
+    console.log(dev2,wes);
   </script>
 
 </body>
