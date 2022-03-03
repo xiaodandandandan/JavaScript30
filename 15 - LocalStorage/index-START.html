@@ -26,10 +26,68 @@
   </div>
 
 <script>
+  /* 
+  localStorage 类似 sessionStorage，但其区别在于：
+  存储在 localStorage 的数据可以长期保留；
+  而当页面会话结束——也就是说，当页面被关闭时，存储在 sessionStorage 的数据会被清除。
+
+  加载页面时从localstorage中获取数据，有则使用，没有则设置空数组
+  submit添加项
+    获取input框输入内容 输入结束后再获取
+    添加item之后在plates中显示 添加li项 其中包含input单选框 label显示输入内容
+  点击添加项时同时改变localStorage中的数据
+  */
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  // JSON.parse() 方法用来解析JSON字符串，构造由字符串描述的JavaScript值或对象
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+  console.log(items);
+  function addItem(e){
+     // 点击按钮后发现 submit 事件触发后的结果是， Console 中闪现 hello 后刷新整个页面，
+    // 这是 submit 的默认行为，在当前的场景中不适用，所以我们需要先去除此事件的默认行为。
+    e.preventDefault();
+    const text = (this.querySelector('[name=item]')).value;
+    const item = {
+      text,
+      done:false
+    }
+    items.push(item);
+    setItemLists(items,itemsList);
+    // 使用 localStorage 的时候，直接把 items 传入得到的值是 [object Object]，
+    // 所以需要在把数据传进去之前就把内容转换成 String 类型的数据，
+    // 之后读取时也使用 JSON.parse() 来将数据转换成 JSON 格式。
+    localStorage.setItem('items',JSON.stringify(items));
+    this.reset();
+  }
+  // 将一个 <label> 和一个 <input> 元素匹配在一起，你需要给 <input> 一个 id 属性。
+  // 而 <label> 需要一个 for 属性，其值和  <input> 的 id 一样。
+  // for 即和 <label> 元素在同一文档中的 可关联标签的元素 的 id
+  function setItemLists(plates = [],platesList){
+    platesList.innerHTML = plates.map((plate,i) =>{
+        return `
+        <li>
+        <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''}/>
+        <label for="item${i}">${plate.text}</label>
+        </li>  
+        `;
+    }).join('');
+  }
+  function toggleDone(e){
+    //console.log(e.target);
+    if (!e.target.matches('input')) return;
+    const el = e.target;
+    //获取当前点击item的data-index
+    const index = el.dataset.index;
+    //更改当前点击item的选择状态
+    items[index].done = !items[index].done;
+    localStorage.setItem('items',JSON.stringify(items))
+    setItemLists(items,itemsList);
+  }
 
+  addItems.addEventListener('submit', addItem);
+  //利用冒泡 给ul绑定事件 点击其中的单选框都会触发
+  itemsList.addEventListener('click',toggleDone)
+  setItemLists(items,itemsList);
 </script>
 
 
