@@ -42,6 +42,36 @@
 
 <button></button>
 <script>
+  //propagation 事件传递
+  //event capture 事件捕获
+  //event bubbling 事件冒泡
+  //once 单次触发
+  const divs = document.querySelectorAll('div');
+  /* divs.forEach(div=>div.addEventListener('click',function(){
+    console.log('div');
+  },{
+    once:true,//点击事件只可触发一次
+    capture:false,
+    
+  })) */
+  //capture设置成true 则点击最内层元素触发事件从外到内，false则由内到外
+  divs[0].addEventListener('click',log1,{capture:true});
+  divs[1].addEventListener('click',log2,{capture:true});
+  divs[2].addEventListener('click',log3,{capture:true});
+
+  function log1(e){
+    console.log('这是第1个div!');
+   
+  }
+  function log2(e){
+    console.log('这是第2个div!');
+    //阻止事件传播 内层div不会再触发事件
+    e.stopPropagation();
+  }
+  function log3(){
+    console.log('这是第3个div!');
+  }
+
 
 </script>
 </body>

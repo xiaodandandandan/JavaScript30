@@ -27,6 +27,32 @@
 
   <script>
     // 👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀
+    //鼠标移动到a标签上会有一个白色背景移入
+    const links = document.querySelectorAll('a');
+    //设置一个span 鼠标移入a标签时跟随移动
+    const highLight = document.createElement('span');
+    highLight.classList.add('highlight');
+    document.body.appendChild(highLight);
+    // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+    function highLightLink(){
+      const span = this.getBoundingClientRect();
+      //console.log(span);
+      const coords = {
+        height:span.height,
+        width:span.width,
+        top:span.top + window.scrollY,
+        left:span.left + window.scrollX
+      }
+     
+      highLight.style.width = `${coords.width}px`;
+      highLight.style.height = `${coords.height}px`;
+       //CSStransform属性允许你旋转，缩放，倾斜或平移给定元素。
+      highLight.style.transform = `translate(${coords.left}px,${coords.top}px)`;
+    }
+    // mouseenter当定点设备（通常指鼠标）移动到元素上时就会触发 mouseenter 事件
+    // 类似 mouseover (en-US)，它们两者之间的差别是 mouseenter 不会冒泡（bubble），
+    // 也就是说当指针从它的子层物理空间移到它的物理空间上时不会触发
+    links.forEach(link=>link.addEventListener('mouseenter',highLightLink))
   </script>
 </body>
 </html>

@@ -182,6 +182,25 @@
     </li>
   </ul>
 <script>
+  // 1.取得所有li中data-time属性的值，将时间换算为秒并累加求得总时间（单位：秒）;
+  // 2.手动计算将总时间转化为新的格式“XX小时XX分XX秒”;
+  // 3.将结果log输出
+  const lis = document.querySelectorAll('li');
+  let seconds = [];
+  lis.forEach(li=>{
+    const temp = (li.dataset.time ).split(':');
+    seconds.push(parseInt(temp[0]*60) + parseInt(temp[1]))
+  });
+  const sum = seconds.reduce((prev,cur) => {
+    return prev + cur
+  },0);
+  
+  const hour = Math.floor(sum / 60 / 60);
+  const min = Math.floor(sum /60 % 60);
+  const sec = Math.floor(sum % 60);
+  console.log(hour,min,sec);
+  
+
 </script>
 </body>
 </html>

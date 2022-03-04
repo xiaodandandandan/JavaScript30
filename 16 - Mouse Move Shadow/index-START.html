@@ -35,6 +35,43 @@
   </style>
 
 <script>
+  //复制四个标题阴影跟随鼠标坐标往四个方向移动
+  // text-shadow样式为标准CSS3样式，用于添加一个或多个文字阴影，用于其的语法格式为：
+  const hero = document.querySelector('.hero');
+  const text = document.querySelector('h1');
+  // 用于标记阴影距离h1中心的距离和鼠标距离h1中心距离的比例，用于计算阴影的具体位置。
+  const walk = 500;
+  function shadowMove(e){
+    // hero元素的宽和高
+    const { offsetWidth: width, offsetHeight: height } = hero;
+    // MouseEvent 接口的只读属性 offsetX 
+    //规定了事件对象与目标节点的内填充边（padding edge）在 X 轴方向上的偏移量。
+    let {offsetX: x, offsetY: y} = e;
+    //console.log(this,e.target);
+    //console.log(this !== e.target);
+    if (this !== e.target) {
+      // 鼠标当前位置的坐标
+      x = x + e.target.offsetLeft;
+      y = y + e.target.offsetTop;
+    }
+    // Math.round()函数返回一个数字四舍五入后最接近的整数
+    const xWalk = Math.round((x / width * walk) - (walk / 2));
+    const yWalk = Math.round((y / height * walk) - (walk / 2));
+
+    /* offset-x | offset-y | blur-radius | color */
+    // 采用绕h1元素中心旋转90°的方式共生成4个阴影
+    text.style.textShadow = `
+      ${xWalk}px ${yWalk}px 0px rgba(255,0,255,0.7),
+      ${xWalk * -1}px ${yWalk}px 0 rgba(0,255,255,0.7),
+      ${yWalk}px ${xWalk * -1}px 0 rgba(0,255,0,0.7),
+      ${yWalk * -1}px ${xWalk}px 0 rgba(0,0,255,0.7)
+    `;
+
+  }
+
+  hero.addEventListener('mousemove',shadowMove);
+
+
 </script>
 </body>
 </html>
