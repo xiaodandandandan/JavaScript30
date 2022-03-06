@@ -33,10 +33,72 @@
   </div>
 
 <script>
+  //开启游戏 初始化各项数值 startGame
+  //随机时间 randomTime 随机选择洞穴 randomHole 出现地鼠 peep
+  //点击到地鼠 判断是否作弊 更新分数数值 地鼠消失  bonk
   const holes = document.querySelectorAll('.hole');
   const scoreBoard = document.querySelector('.score');
   const moles = document.querySelectorAll('.mole');
+  let lastHole;
+  let timeUp = false;
+  let score = 0;
 
+  //随机时间
+  function randomTime(min, max) {
+    //随机得到两个数之间的数
+    return Math.round(Math.random() * (max - min) + min);
+  }
+
+  // 随机获取洞穴
+  function randomHole(holes) {
+    //随机取得hole的索引
+    const idx = Math.floor(Math.random() * holes.length);
+    // console.log(idx);
+    const hole = holes[idx];
+    //防止随机到同一个洞
+    if (hole === lastHole) {
+      console.log('Ah nah thats the same one bud');
+      return randomHole(holes);
+    }
+    //更新lastHole为当前取得的元素
+    lastHole = hole;
+    return hole;
+  }
+
+  function peep() {
+    //随机设置地鼠停留的时间
+    const time = randomTime(200, 1000);
+    // console.log(time);
+    const hole = randomHole(holes);
+    //添加出现地鼠的类
+    hole.classList.add('up');
+    // 定时器设置随机时间后重新生成新的地鼠出现
+    setTimeout(() => {
+      hole.classList.remove('up');
+      if (!timeUp) peep();
+    }, time);
+  }
+
+  function startGame() {
+    // 初始化数值
+    scoreBoard.textContent = 0;
+    timeUp = false;
+    score = 0;
+    //随机产生地鼠
+    peep();
+    //10s后游戏结束
+    setTimeout(() => timeUp = true, 10000)
+  }
+  // e.isTrusted：返回一个布尔值,表明当前事件是否是由用户点击触发
+  // (比如说真实的鼠标点击触发一个click事件), 还是由一个脚本生成的，防止用户作弊。
+  function bonk(e) {
+    if(!e.isTrusted) return; // cheater!
+    score++;
+    //被打中的地鼠消失
+    this.parentNode.classList.remove('up');
+    scoreBoard.textContent = score;
+  }
+  moles.forEach(mole => mole.addEventListener('click', bonk));
 </script>
 </body>
 </html>

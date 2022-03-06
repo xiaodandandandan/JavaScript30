@@ -35,6 +35,37 @@
   </div>
 
 <script>
+  const slider = document.querySelector('.items');
+  let isDown = false;
+  let startX;//按下时位置的x坐标
+  let scrollLeft;//记录视口相对于items最左侧已经滚过的距离
+
+  slider.addEventListener('mousedown',(e)=>{
+    isDown = true;
+    slider.classList.add('active');
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
+
+  slider.addEventListener('mouseup',()=>{
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mousemove',(e)=>{
+    if(!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 3; //将鼠标移动距离放大后作为条幅的移动距离
+    console.log(scrollLeft - walk);
+    slider.scrollLeft = scrollLeft - walk;
+  })
+
 </script>
 
   </body>

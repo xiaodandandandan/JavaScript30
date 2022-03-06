@@ -220,6 +220,40 @@
 </style>
 
 <script>
+  const bg = document.querySelector('.dropdownBackground');
+  const lis = document.querySelectorAll('.cool >li');
+  const nav  = document.querySelector('.top');
+  
+  function handleEnter(){
+    this.classList.add('trigger-enter');
+    setTimeout(() => 
+    this.classList.contains('trigger-enter') && this.classList.add('trigger-enter-active'),
+    150);
+    bg.classList.add('open');
+    const dropdown = this.querySelector('.dropdown');
+    const dropdownCoords = dropdown.getBoundingClientRect();
+    //console.log(dropdownCoords);
+    const navbox = nav.getBoundingClientRect();
+    //console.log(navbox);
+    const coords = {
+      width:dropdownCoords.width,
+      height:dropdownCoords.height,
+      top:dropdownCoords.top - navbox.top,
+      left:dropdownCoords.left - navbox.left
+    }
+    //!!!!!记得加单位!!!!
+    bg.style.setProperty('width', `${coords.width}px`);
+    bg.style.setProperty('height',`${coords.height}px`);
+    bg.style.setProperty('transform',`translate(${coords.left}px,${coords.top}px)`);
+  }
+  function handleLeave(){
+    this.classList.remove('trigger-enter','trigger-enter-active');
+    bg.classList.remove('open');
+  }
+
+  lis.forEach(li=>li.addEventListener('mouseenter',handleEnter));
+  lis.forEach(li=>li.addEventListener('mouseleave',handleLeave));
+
 </script>
 
 </body>

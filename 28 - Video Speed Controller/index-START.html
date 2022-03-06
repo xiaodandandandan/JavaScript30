@@ -15,6 +15,27 @@
   </div>
 
 <script>
+  const speed = document.querySelector('.speed');
+  const bar = speed.querySelector('.speed-bar');
+  const video = document.querySelector('.flex');
+  function handleMove(e){
+    //鼠标在bar内的y坐标
+    const y = e.clientY - this.offsetTop;
+    const percent = y/this.offsetHeight;
+    //console.log(percent);
+    const min = 0.4;
+    const max = 4;
+    // 设置bar的填充高度
+    const height = Math.round(percent * 100) + '%';
+    const playbackRate = percent * (max - min) + min;
+    //console.log(playbackRate);
+    bar.style.height = height;
+    // textContent 属性表示一个节点及其后代的文本内容。
+    bar.textContent = playbackRate.toFixed(2) + '×';
+    //视频默认播放数据
+    video.playbackRate = playbackRate;
+  }
+  speed.addEventListener('mousemove', handleMove);
 </script>
 </body>
 </html>
